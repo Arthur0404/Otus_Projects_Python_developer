@@ -22,7 +22,7 @@ def new_even(x):
     return x % 2 == 0
 
 
-def IsPrime(n):
+def is_prime(n):
     d = 2
     while n % d != 0:
         d += 1
@@ -30,9 +30,9 @@ def IsPrime(n):
 
 
 def filter_numbers(new_list, new_type):
-    if new_type == "odd":
+    if new_type == ODD:
         return list(filter(new_odd, new_list))
-    elif new_type == "even":
+    elif new_type == EVEN:
         return list(filter(new_even, new_list))
-    elif new_type == "prime":
-        return list(filter(IsPrime, new_list))
+    elif new_type == PRIME:
+        return list(filter(is_prime, new_list))
