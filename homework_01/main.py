@@ -4,8 +4,8 @@
 """
 
 
-def power_numbers(*args):
-    return [elem * elem for elem in args]
+def power_numbers(*numbers):
+    return [elem * elem for elem in numbers]
 
 
 # filter types
