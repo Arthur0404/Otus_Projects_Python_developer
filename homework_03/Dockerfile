@@ -1,3 +1,8 @@
+# Чтобы запустить докер файл необходимо
+# установить все зависимости командой - pip install -r requirements.txt
+# собрать билд докера командой docker build . -t app-app
+# запустить докер контейнер командой docker run app-app
+
 FROM python:3.9-buster
 
 WORKDIR /var/app
