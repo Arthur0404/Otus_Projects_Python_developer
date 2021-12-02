@@ -7,65 +7,63 @@
 для модели Post обязательными являются user_id, title, body
 создайте связи relationship между моделями: User.posts и Post.user
 """
-
 import os
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    Text,
+)
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker, declared_attr
 
-PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
+PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://user:password@localhost/postgres"
 
-engine = create_async_engine(PG_CONN_URI, echo=True)
+engine = create_async_engine(
+    PG_CONN_URI,
+    echo=True,
+)
 
-Base = declarative_base(bind=engine)
-Session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-
-class User(Base):
-    __tablename__ = "User"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(32), nullable=False)
-    username = Column(String(128), unique=True, nullable=False)
-    email = Column(String(128), unique=True, nullable=False)
-
-    posts = relationship("Post", back_populates = "user")
-
-    def __str__(self):
-        return f"{self.__class__.__name__}(id={self.id}, name={self.name}, username={self.username}, email={self.email})"
+Session = sessionmaker(
+    engine,
+    expire_on_commit=False,
+    class_=AsyncSession,
+)
 
 
-    def __repr__(self):
-        return str(self)
-
-    __mapper_args__={"eager_defaults":False}
-
-class Post(Base):
-
-    __tablename = "Post"
+class Base:
+    """
+    Базовая модель для создания таблиц
+    """
+    @declared_attr
+    def __tablename__(cls):
+        return f"blog_app__{cls.__name__.lower()}s"
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("User.id"))
-    title=Column(String(256))
-    body= Column(String(256))
+
+
+Base = declarative_base(cls=Base)
+
+
+class User(Base):
+    """
+    Модель таблицы пользователя
+    """
+    name = Column(String(32), unique=True)
+    username = Column(String(32), unique=True)
+    email = Column(String(32), unique=True)
+
+    posts = relationship("Post", back_populates="user")
+
+
+class Post(Base):
+    """
+    Модель таблицы постов
+    """
+    title = Column(String(256), nullable=False, default="", server_default="")
+    body = Column(Text, nullable=False, default="", server_default="")
+    user_id = Column(Integer, ForeignKey("blog_app__users.id"), nullable=True)
 
     user = relationship("User", back_populates="posts")
-
-    def __str__(self):
-        return f"{self.__class__.__name__}(user_id={self.user_id},name={self.title!r}, body={self.body}"
-
-
-
-    def __repr__(self):
-        return str(self)
-
-    __mapper_args__ = {"eager_defaults": False}
-
-
-
-
-
-
-
-
-
-
