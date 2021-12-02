@@ -2,6 +2,7 @@
 # установить все зависимости командой - pip install -r requirements.txt
 # собрать билд докера командой docker build . -t app-app
 # запустить докер контейнер командой docker run app-app
+# чтобы отображалось наше приложение на фронте - надо дописать команду: docker run -p 8000:8000 app-app
 
 FROM python:3.9-buster
 

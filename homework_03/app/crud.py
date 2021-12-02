@@ -1,9 +1,8 @@
-from typing import Dict, List
 
 from schemas import UserIn, User
 
-USER_ID_TO_USER: Dict[int, User] = {}
-USER_TOKEN_TO_USER: Dict[str, User] = {}
+USER_ID_TO_USER: dict[int, User] = {}
+USER_TOKEN_TO_USER: dict[str, User] = {}
 
 
 def create_user(user_in: UserIn) -> User:
@@ -13,5 +12,5 @@ def create_user(user_in: UserIn) -> User:
     return user
 
 
-def list_users() -> List[User]:
+def list_users() -> list[User]:
     return list(USER_ID_TO_USER.values())
